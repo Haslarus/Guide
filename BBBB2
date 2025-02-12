@@ -1,0 +1,16 @@
+SRV1-HQ:
+Создаём юнит типа service с названием timer:
+vim /etc/systemd/system/backup.timer
+
+[Unit]
+Description=Backup /opt/data share folder Timer
+[Timer]
+OnCalendar=x-x-× 20:00:00
+Persistent=true
+Unit=backup.service
+[Install]
+MantedBy=tiners.target
+
+systemctl daemon-reload
+Включаем и добавляем в автозагрузку созданные юнит backup.timer:
+systemctl enable --now backup.timer
