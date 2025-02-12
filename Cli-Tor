@@ -1,0 +1,38 @@
+samba-tool group add group1
+samba-tool group add group2
+samba-tool group add group3
+
+vim /etc/bind/huy.sh
+
+#!/bin/bash
+for i in {1..10}; do
+  samba-tool user add user$i P@ssw0rd;
+  samba-tool user setexpiry user$i --noexpiry;
+  samba-tool group addmembers "group1" user$i;
+done
+
+bash /etc/bind/huy.sh
+
+
+vim /etc/bind/huy2.sh
+#!/bin/bash
+for i in {11..20}; do
+  samba-tool user add user$i P@ssw0rd;
+  samba-tool user setexpiry user$i --noexpiry;
+  samba-tool group addmembers "group2" user$i;
+done
+
+bash /etc/bind/huy2.sh
+
+vim /etc/bind/huy3.sh
+#!/bin/bash
+for i in {21..30}; do
+  samba-tool user add user$i P@ssw0rd;
+  samba-tool user setexpiry user$i --noexpiry;
+  samba-tool group addmembers "group3" user$i;
+done
+
+bash /etc/bind/huy3.sh
+
+samba-tool ou add 'OU=CLI'
+samba-tool ou add 'OU=ADMIN'
