@@ -1,0 +1,28 @@
+Reserv
+
+vim /etc/bind/options.conf
+
+listen-on {127.0.0.1: 192.168.33.66: }; 
+listen-on-v6 ( none: );
+
+forwarders ( 77.88.8.8: };
+allou-query { 192.168.33.0/24: 192.168.11.0/24; }:
+allow-transfer ( none:);
+
+control bind-slave enabled
+cat <<EOF > /etc/net/ifaces/ens19/resolv.conf
+  search au.team
+  nameserver 192.168.33.66
+  nameserver 192.168.11.66
+EOF
+Перезагружаем службу network:
+systemctl restart network
+Включаем и добавляем в автозагрузку службу bind:
+systemctl enable --now bind
+
+R-H
+r-hq#configure terminal
+r-hq(config)#ip name-server 192.168.11.66 192.168.33.66
+r-hq(config)#ip domain-name au.team
+r-hq(config)#write
+r-hq(config)#
