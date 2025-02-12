@@ -1,0 +1,33 @@
+SRV1-HQ:
+Установим необходимый пакет:
+apt-get install task-samba-dc -y
+⁠ Настройка BIND9 для работы с Samba AD:
+Отключаем chroot:
+control bind-chroot disabled
+Отключаем KRB5RCACHETYPE:
+grep -q KRB5RCACHETYPE /etc/sysconfig/bind || echo 'KRB5RCACHETYPE="none"' >> /etc/sysconfig/bind
+Подключаем плагин BIND_DLZ:
+grep -q 'bind-dns' /etc/bind/named.conf || echo 'include "/var/lib/samba/bind-dns/named.conf";' >> /etc/bind/named.conf
+Отредактируем файл /etc/bind/options.conf:
+vim /etc/bind/options.conf
+
+OP
+tkey-gssapi-keytab "/var/lib/samba/bind-dns/dns.keytab"; 
+minimal-responses yes;
+
+LOg
+category lame-servers { null; };
+
+systemctl stop bind
+
+rm -f /etc/samba/smb.conf
+rm -rf /var/lib/samba
+rm -rf /var/cache/samba
+mkdir -p /var/lib/samba/sysvol
+
+samba-tool domain provision
+
+systemctl enable --now samba
+
+
+cp /var/lib/samba/private/krb5.conf /etc/krb5.conf
