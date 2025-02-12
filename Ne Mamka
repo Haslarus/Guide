@@ -1,0 +1,20 @@
+SRV1-HQ:
+Создаём директорию для общей папки:
+mkdir /opt/data
+Задаём права на директорию:
+chmod 777 /opt/data
+Реализуем общую папку, вносим следующую информацию в конфигурационный файл /etc/samba/smb.conf:
+
+
+[SAMBA]
+path = /opt/data
+comment = "SAMBA"
+public = yes
+uritable = yes
+brouseable = yes 
+guest ok = yes
+
+Перезагружаем службу samba:
+systemctl restart samba
+
+
