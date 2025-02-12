@@ -1,0 +1,17 @@
+SRV1-HQ:
+Создаём директорию для хранения бэкапа общей папки:
+mkdir /var/bac/
+Создаём юнит типа service с названием backup:
+vim /etc/systemd/system/backup.service
+
+[Unit]
+Description=Backup /opt/data
+[Service]
+Type=oneshot
+ExecStart=/bin/tar -czf "/var/bac/SAMBA.tar.gz"/opt/data
+[Install]
+JantedBy=nulti-user.target
+
+systemctl daemon-reload
+Включаем и добавляем в автозагрузку созданные юнит backup.service:
+systemctl enable --now backup.service
